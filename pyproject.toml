@@ -3,5 +3,39 @@ name = "assignment2"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.12"
+dependencies = [
+    "jupyter>=1.1.1",
+    "pandas>=1.5,<2.2",
+    "pytorch-lightning>=2.0,<2.2",
+    "setuptools<81",
+    "tensorboard>=2.21.0",
+    "torch>=2.4.0,<2.5",
+    "torch-geometric>=2.8.0.post1",
+    # macOS has no CUDA -> CPU/MPS build + plain-version PyG wheels
+    "torch-scatter>=2.1.2 ; sys_platform == 'darwin'",
+    "torch-sparse>=0.6.18 ; sys_platform == 'darwin'",
+    # Windows -> CUDA 12.4 build + matching +cu124 PyG wheels
+    # (if nvidia-smi shows CUDA 11.x, change cu124 -> cu118 in all 3 places)
+    "torch-scatter==2.1.2+pt24cu124 ; sys_platform == 'win32'",
+    "torch-sparse==0.6.18+pt24cu124 ; sys_platform == 'win32'",
+    "torch-spatiotemporal>=0.9.5",
+]
+
+[tool.uv]
+find-links = [
+    "https://data.pyg.org/whl/torch-2.4.0+cpu.html",    # macOS wheels
+    "https://data.pyg.org/whl/torch-2.4.0+cu124.html",  # Windows CUDA wheels
+]
+
+# Pull the CUDA build of torch from PyTorch's own index, Windows only.
+# macOS falls back to PyPI (the universal2 CPU/MPS wheel).
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu124", marker = "sys_platform == 'win32'" },
+]
