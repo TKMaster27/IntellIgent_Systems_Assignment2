@@ -20,6 +20,7 @@ dependencies = [
     "torch-scatter==2.1.2+pt24cu124 ; sys_platform == 'win32'",
     "torch-sparse==0.6.18+pt24cu124 ; sys_platform == 'win32'",
     "torch-spatiotemporal>=0.9.5",
+    "matplotlib>=3.10.9",
 ]
 
 [tool.uv]
